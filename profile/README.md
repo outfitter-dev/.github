@@ -29,8 +29,8 @@ Purpose-built, composable utilities that make building products faster, and (hop
 ## Follow along
 
 * **Website:** [https://outfitter.dev](https://outfitter.dev)
-* **X/Twitter:** [https://x.com/outfitter_dev](https://x.com/outfitter_dev)
-* **GitHub (me):** [https://github.com/galligan](https://github.com/galligan)
+* **X/Twitter:** [@mg](https://x.com/mg) / [@outfitter_dev](https://x.com/outfitter_dev)
+* **GitHub (me):** [@galligan](https://github.com/galligan)
 
 ## Contributing
 
