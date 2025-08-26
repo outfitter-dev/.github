@@ -2,7 +2,7 @@
 
 > Supplying explorers of all types. We build practical tools for humans & agents alike.
 
-> [!NOTE]
+> [!WARNING]
 > Active R&D, lots of edges. Most work here is by [@galligan](https://github.com/galligan) with help from a bunch of handy robots. Expect rapid iteration and occasional breaking changes.
 
 ## What is Outfitter?
