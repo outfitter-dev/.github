@@ -1,22 +1,43 @@
-# Maybe Good Systems
+# Outfitter 🎒
+
+> Supplying explorers of all types. We build practical tools for humans & agents alike.
 
 > [!NOTE]
-> This "project" is just getting off the ground, so pardon the brevity and well, general lack of things for now.
+> Active R&D, lots of edges. Most work here is by [@galligan](https://github.com/galligan) with help from a bunch of handy robots. Expect rapid iteration and occasional breaking changes.
 
-## About ~~us~~ me
+## What is Outfitter?
 
-🤖 We (mostly just @mg and a team of agents) make software and other stuff
+Purpose-built, composable utilities that make building products faster, and (hopefully) easier (without heavy platforms or lock‑in). Think “expedition gear” for modern agentic development.
 
-## Why "maybe good?"
+## What’s here (and coming online)
 
-1. 👉🏻 My initials are MG
-2. 🤞🏻 I generally try to make stuff that's useful, and hopefully may be good
-3. 🤘🏻 The things I make are helpful/useful/fun for me, and while not guaranteed, they may be good for you too…
+* **[Waymark](https://github.com/outfitter-dev/waymark)** — lightweight `:::` code wayfinding so humans and agents can navigate the same breadcrumbs.
+* **[Rulesets](https://github.com/outfitter-dev/rulesets)** — write rules once; compile to multiple agent formats (Cursor, Claude Code, etc.).
+* **[Carabiner](https://github.com/outfitter-dev/carabiner)** — type‑safe hooks for Claude Code that intercept/guard agent actions (shell, git, fs, http).
+* **[Blz](https://github.com/outfitter-dev/blz)** — (really) fast, local‑first search over `llms.txt` sources so agents don't have crawl the web anymore.
+* **[Basecamp](https://github.com/outfitter-dev/monorepo) (monorepo)** — shared configs, types, and scripts to keep projects boring and consistent.
+* **Radio** *(early)* — a thin coordination layer that ingests signals and points the way for agents…think agentic PMs.
 
-## How can I get in touch?
+## Philosophy
 
-You can reach me on:
+* **Composable, not monolithic** — use one, some, or all.
+* **Typed and explicit** — clarity beats cleverness.
+* **Human‑friendly, agent‑ready** — shared language, simple surfaces.
+* **Local‑first when pragmatic** — speed and ownership over ceremony.
+* **No platform lock‑in** — small tools, clear escape hatches.
 
-- [Bluesky as @galligan.xyz](https://bsky.app/profile/galligan.xyz)
-- [Twitter/X as @mg](https://x.com/mg)
-- [Threads as @mg](https://www.threads.net/@mg)
+## Follow along
+
+* **Website:** [https://outfitter.dev](https://outfitter.dev)
+* **X/Twitter:** [https://x.com/outfitter_dev](https://x.com/outfitter_dev)
+* **GitHub (me):** [https://github.com/galligan](https://github.com/galligan)
+
+## Contributing
+
+Early days! Feedback and issues are welcome. Small, focused PRs with clear context are easiest to review. Individual repos include setup and tooling {TypeScript (and some Rust), Bun, Biome} where applicable.
+
+## License
+
+Projects carry their own licenses; check each repository for details.
+
+— Built while exploring. By [@galligan](https://github.com/galligan).
