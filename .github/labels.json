@@ -51,17 +51,30 @@
       "question"
     ]
   },
-
-  // Bug sublabels (use with type/bug)
+  {
+    "name": "type/feedback",
+    "color": "d876e3",
+    "description": "User or stakeholder feedback"
+  },
+  {
+    "name": "type/idea",
+    "color": "fbbf24",
+    "description": "Feature idea or suggestion"
+  },
+  {
+    "name": "type/epic",
+    "color": "9333ea",
+    "description": "Large feature or initiative"
+  },
   {
     "name": "bug/regression",
     "color": "e11d48",
-    "description": "Previously fixed behavior broke"
+    "description": "Previously working functionality broke"
   },
   {
     "name": "bug/crash",
     "color": "dc2626",
-    "description": "App crash or fatal error"
+    "description": "Fatal error causing termination"
   },
   {
     "name": "bug/security",
@@ -71,42 +84,32 @@
   {
     "name": "bug/performance",
     "color": "d97706",
-    "description": "Performance degradation or slowness"
+    "description": "Slow, inefficient, or resource-heavy"
   },
   {
     "name": "bug/data-loss",
     "color": "7f1d1d",
-    "description": "Data loss or corruption"
+    "description": "Data corruption or loss"
   },
   {
     "name": "bug/compat",
     "color": "9333ea",
-    "description": "Compatibility/interoperability issue"
+    "description": "Compatibility between systems/versions"
   },
   {
     "name": "bug/ui",
     "color": "f43f5e",
-    "description": "Visual/UI defect"
+    "description": "Visual defects or layout issues"
   },
   {
-    "name": "priority/P0",
-    "color": "b60205",
-    "description": "Critical—top of queue"
+    "name": "bug/flaky",
+    "color": "f59e0b",
+    "description": "Intermittent failures"
   },
   {
-    "name": "priority/P1",
-    "color": "d93f0b",
-    "description": "High"
-  },
-  {
-    "name": "priority/P2",
-    "color": "fbca04",
-    "description": "Medium"
-  },
-  {
-    "name": "priority/P3",
-    "color": "0e8a16",
-    "description": "Low"
+    "name": "bug/blocked",
+    "color": "ef4444",
+    "description": "Prevents other work from proceeding"
   },
   {
     "name": "status/triage",
@@ -223,6 +226,31 @@
     "description": "Deprecated - scheduled for removal"
   },
   {
+    "name": "size/XS",
+    "color": "e2e8f0",
+    "description": "Very small change (≈ ≤25 LOC)"
+  },
+  {
+    "name": "size/S",
+    "color": "cbd5e1",
+    "description": "Small change (≈ 26–100 LOC)"
+  },
+  {
+    "name": "size/M",
+    "color": "94a3b8",
+    "description": "Medium change (≈ 101–300 LOC)"
+  },
+  {
+    "name": "size/L",
+    "color": "64748b",
+    "description": "Large change (≈ 301–800 LOC)"
+  },
+  {
+    "name": "size/XL",
+    "color": "475569",
+    "description": "Very large change (≈ >800 LOC)"
+  },
+  {
     "name": "semver/major",
     "color": "7b1fa2",
     "description": "Breaking change"
@@ -247,8 +275,106 @@
     "color": "e9d5ff",
     "description": "Version bump only"
   },
-
-  // Changeset labels (process only)
+  {
+    "name": "source/community",
+    "color": "0e8a16",
+    "description": "Opened by external contributor/user"
+  },
+  {
+    "name": "source/internal",
+    "color": "6f42c1",
+    "description": "Opened by core team"
+  },
+  {
+    "name": "source/user",
+    "color": "0366d6",
+    "description": "Requested by a user/customer"
+  },
+  {
+    "name": "source/agent",
+    "color": "9333ea",
+    "description": "Created by AI agent (Claude, Copilot, etc.)"
+  },
+  {
+    "name": "good first issue",
+    "color": "7057ff",
+    "description": "Good for newcomers",
+    "replaces": [
+      "good-first-issue"
+    ]
+  },
+  {
+    "name": "help wanted",
+    "color": "008672",
+    "description": "Extra attention is needed",
+    "replaces": [
+      "help-wanted"
+    ]
+  },
+  {
+    "name": "agent/claude",
+    "color": "8b5cf6",
+    "description": "Claude AI integration/functionality",
+    "replaces": [
+      "claude"
+    ]
+  },
+  {
+    "name": "agent/coderabbit",
+    "color": "f97316",
+    "description": "CodeRabbit AI integration/functionality",
+    "replaces": [
+      "coderabbit"
+    ]
+  },
+  {
+    "name": "agent/codex",
+    "color": "06b6d4",
+    "description": "Codex AI integration/functionality",
+    "replaces": [
+      "codex"
+    ]
+  },
+  {
+    "name": "agent/cursor",
+    "color": "10b981",
+    "description": "Cursor AI integration/functionality",
+    "replaces": [
+      "cursor"
+    ]
+  },
+  {
+    "name": "agent/amp",
+    "color": "ec4899",
+    "description": "Amp AI integration/functionality",
+    "replaces": [
+      "amp"
+    ]
+  },
+  {
+    "name": "agent/devin",
+    "color": "3b82f6",
+    "description": "Devin AI integration/functionality",
+    "replaces": [
+      "devin"
+    ]
+  },
+  {
+    "name": "queue/merge",
+    "color": "22c55e",
+    "description": "Ready to merge",
+    "replaces": [
+      "queue:merge"
+    ]
+  },
+  {
+    "name": "queue/hotfix",
+    "color": "ef4444",
+    "description": "Hotfix - expedite merge",
+    "replaces": [
+      "queue:hotfix"
+    ]
+  },
   {
     "name": "changeset/added",
     "color": "10b981",
@@ -276,26 +402,6 @@
     ]
   },
   {
-    "name": "source/community",
-    "color": "0e8a16",
-    "description": "Opened by external contributor/user"
-  },
-  {
-    "name": "source/internal",
-    "color": "6f42c1",
-    "description": "Opened by core team"
-  },
-  {
-    "name": "source/user",
-    "color": "0366d6",
-    "description": "Requested by a user/customer"
-  },
-  {
-    "name": "source/agent",
-    "color": "9333ea",
-    "description": "Created by AI agent (Claude, Copilot, etc.)"
-  },
-  {
     "name": "scope/api",
     "color": "2d5a27",
     "description": "API endpoints and contracts"
@@ -303,36 +409,49 @@
   {
     "name": "scope/ui",
     "color": "8bc34a",
-    "description": "UI/UX"
+    "description": "UI/UX components and styling"
   },
   {
     "name": "scope/cli",
     "color": "4caf50",
-    "description": "Command-line tools"
+    "description": "Command-line tools and interfaces"
   },
   {
     "name": "scope/backend",
     "color": "28a745",
-    "description": "Backend (Server, Workers, Runtime, etc.)"
+    "description": "Backend services, workers, runtime"
   },
   {
-    "name": "scope/docs",
+    "name": "scope/documentation",
     "color": "66cc99",
-    "description": "Docs site & guides"
+    "description": "Documentation, guides, and examples",
+    "replaces": [
+      "scope/docs"
+    ]
+  },
+  {
+    "name": "scope/build",
+    "color": "22c55e",
+    "description": "Build system and compilation"
   },
   {
     "name": "scope/ci",
     "color": "2ea44f",
-    "description": "CI/CD (GitHub Actions, etc.)"
+    "description": "CI/CD pipelines and automation"
   },
   {
     "name": "scope/deps",
     "color": "34d058",
-    "description": "Dependencies"
+    "description": "Dependencies and packages"
   },
   {
     "name": "scope/tests",
     "color": "4caf50",
-    "description": "Testing & coverage"
+    "description": "Test suites and coverage"
+  },
+  {
+    "name": "scope/architecture",
+    "color": "007bff",
+    "description": "System design and structure"
   }
 ]

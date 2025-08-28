@@ -1,7 +1,7 @@
 // Build .github/labels.json from src/labels sources
 // Usage:
 //   bun scripts/build-labels.ts [--include-optional]
-// By default includes: core.json + scopes-common.json
+// By default includes: core.json
 // If --include-optional is provided, also merges scopes-optional.json
 
 import { readFile, writeFile } from 'node:fs/promises'
@@ -44,9 +44,8 @@ async function main() {
   const outPath = resolve(root, '.github/labels.json')
 
   const core = await readJsonArray<Label>(src('core.json'))
-  const scopesCommon = await readJsonArray<Label>(src('scopes-common.json'))
 
-  let parts: Label[][] = [core, scopesCommon]
+  let parts: Label[][] = [core]
 
   if (includeOptional) {
     try {
