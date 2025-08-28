@@ -1,4 +1,4 @@
-# IMPORTANT: Do not move this file in your repo! Make sure it's located at .github/workflows/claude-dispatch.yml
+# IMPORTANT: Do not move this file in your repo! Make sure it's located at .github/workflows/agent-claude-dispatch.yml
 name: Claude Code Dispatch
 
 # IMPORTANT: Do not modify this `on` section!
@@ -9,6 +9,9 @@ on:
 jobs:
   claude-dispatch:
     runs-on: ubuntu-latest
+    concurrency:
+      group: claude-dispatch-${{ github.run_id }}
+      cancel-in-progress: true
     permissions:
       contents: write
       pull-requests: write
@@ -29,7 +32,7 @@ jobs:
 
       - name: Run Claude Code
         id: claude
-        uses: anthropics/claude-code-action@eap
+        uses: anthropics/claude-code-action@9726ef5  # v1
         with:
           mode: 'remote-agent'
 
@@ -57,7 +60,7 @@ jobs:
               }
             }
 
-          # Allow additioanl domains
+          # Allow additional domains
           experimental_allowed_domains: |
             .anthropic.com
             .github.com
@@ -65,7 +68,6 @@ jobs:
             ghcr.io
             .blob.core.windows.net
 
-          # Optional: Allow Claude to run specific commands
           # Allow Claude to run specific commands
           allowed_tools: |
             Edit,Read,Write,Bash
@@ -77,3 +79,4 @@ jobs:
             You also have access to `mcp__sequential-thinking__sequentialthinking` to work out more complex problems. Use it to think longer.
             Use Bun to the fullest extent
             Don't .gitignore `.agent/` or `path/to/rules` if they're not compiled with Rulesets
+

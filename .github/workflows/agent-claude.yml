@@ -12,7 +12,7 @@ on:
 
 jobs:
   claude:
-    # Allow specific bots (@copilot[bot], @devin[bot], @coderabbitai[bot]) and all humans to trigger Claude
+    # Allow specific bots (@copilot[bot], @devin[bot], @coderabbitai[bot], @cursor[bot]) and all humans to trigger Claude
     if: >
       (github.event_name == 'issue_comment' &&
        github.event.issue.pull_request &&
@@ -24,13 +24,18 @@ jobs:
        (github.event.comment.user.type != 'Bot' ||
         contains(fromJSON('["copilot[bot]", "devin[bot]", "coderabbitai[bot]", "cursor[bot]"]'), github.event.comment.user.login))) ||
       (github.event_name == 'pull_request_review' &&
+       github.event.review && github.event.review.body &&
        contains(github.event.review.body, '@claude') &&
        (github.event.review.user.type != 'Bot' ||
         contains(fromJSON('["copilot[bot]", "devin[bot]", "coderabbitai[bot]", "cursor[bot]"]'), github.event.review.user.login))) ||
       (github.event_name == 'issues' &&
        github.event.action == 'assigned' &&
        github.event.assignee &&
-       github.event.assignee.login == 'claude')
+       github.event.assignee.login == 'claude') ||
+      (github.event_name == 'issues' &&
+       github.event.action == 'opened' &&
+       github.event.issue &&
+       contains(github.event.issue.assignees.*.login, 'claude'))
     runs-on: ubuntu-latest
     concurrency:
       group: claude-${{ github.event.pull_request.number || github.event.issue.number || github.run_id }}
@@ -49,7 +54,8 @@ jobs:
 
       - name: Run Claude Code
         id: claude
-        uses: anthropics/claude-code-action@v1
+        if: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
+        uses: anthropics/claude-code-action@9726ef5  # v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           # Allow bots
@@ -75,7 +81,7 @@ jobs:
           # Optional: add assignee trigger for issues
           assignee_trigger: 'claude'
 
-          # Allow additioanl domains
+          # Allow additional domains
           experimental_allowed_domains: |
             .anthropic.com
             .github.com

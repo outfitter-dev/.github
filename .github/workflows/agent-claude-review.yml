@@ -9,9 +9,11 @@ on:
 jobs:
   claude-review:
     # Run on PR events (open, ready_for_review, review_requested) OR when someone comments "@claude review"
-    # Allow specific bots (@copilot[bot], @devin[bot], @coderabbitai[bot]) and all humans
+    # Allow specific bots (@copilot[bot], @devin[bot], @coderabbitai[bot], @cursor[bot]) and all humans
     if: |
-      (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
+      (github.event_name == 'pull_request' &&
+       github.event.pull_request.draft == false &&
+       github.event.pull_request.head.repo.fork == false) ||
       (github.event_name == 'issue_comment' &&
        github.event.issue.pull_request &&
        github.event.comment &&
@@ -38,7 +40,8 @@ jobs:
 
       - name: Run Claude Code Review
         id: claude-review
-        uses: anthropics/claude-code-action@v1
+        if: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
+        uses: anthropics/claude-code-action@9726ef5  # v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
 
@@ -88,7 +91,6 @@ jobs:
           # if: |
           #   !contains(github.event.pull_request.title, '[skip-review]') &&
           #   !contains(github.event.pull_request.title, '[WIP]')
-          
 # This workflow runs automatically when:
 # 1. A PR is first opened (not draft)
 # 2. A draft PR is marked as ready for review
@@ -102,7 +104,7 @@ jobs:
 #
 # Allowed comment sources:
 # - All human users
-# - Specific bots: @copilot[bot], @devin[bot], @coderabbitai[bot]
+# - Specific bots: @copilot[bot], @devin[bot], @coderabbitai[bot], @cursor[bot]
 #
 # It will NOT run on:
 # - New commits to existing PRs (unless manually triggered)
