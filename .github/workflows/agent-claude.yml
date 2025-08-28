@@ -51,18 +51,37 @@ jobs:
         id: claude
         uses: anthropics/claude-code-action@v1
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          # Provide Claude with custom instructions
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Allow bots
+          allowed_bots: |
+            copilot[bot]
+            devin[bot]
+            coderabbitai[bot]
+            cursor[bot]
+          # Provide Claude with instructions
           prompt: |
-            You have been granted tools for editing files and running bun commands (install, run, test, typecheck, format, lint, sandbox, pre*) for testing your changes.
-            You also have access to sequential thinking MCP server to work out more complex problems. Use it to think longer.
-            Use Bun to the fullest extent.
-            Don't .gitignore `.agent/` or `path/to/rules` if they're not compiled with Rulesets.
-          
-          # Claude CLI arguments
+            You have also been granted tools for editing files and running bun commands (install, run, test, typecheck, format, lint, sandbox, pre*) for testing your changes.
+            You also have access to `mcp__sequential-thinking__sequentialthinking` to work out more complex problems. Use it to think longer.
+            Use Bun to the fullest extent
+            Don't .gitignore `.agent/` or `path/to/rules` if they're not compiled with Rulesets
+          # Claude CLI arguments (model, tools, MCP config)
           claude_args: |
             --model claude-opus-4-1-20250805
-            --max-turns 10
+            --allowedTools "Edit,Read,Write,Bash(bun install),Bash(bun test:*),Bash(bun format:*),Bash(bun typecheck:*),Bash(bun lint:*),Bash(bun sandbox:*),Bash(bun pre:*),mcp__sequential-thinking__sequentialthinking"
+            --mcp-config '{"mcpServers":{"sequential-thinking":{"command":"npx","args":["-y","@modelcontextprotocol/server-sequential-thinking"]}}}'
+          # This is an optional setting that allows Claude to read CI results on PRs
+          additional_permissions: |
+            actions: read
+          # Optional: add assignee trigger for issues
+          assignee_trigger: 'claude'
+
+          # Allow additioanl domains
+          experimental_allowed_domains: |
+            .anthropic.com
+            .github.com
+            .githubusercontent.com
+            ghcr.io
+            .blob.core.windows.net
 
           # Optional: Custom environment variables for Claude
           # claude_env: |

@@ -40,7 +40,7 @@ jobs:
         id: claude-review
         uses: anthropics/claude-code-action@v1
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
 
           # Prompt with safe event guard and combined guidance
           prompt: |
@@ -68,9 +68,12 @@ jobs:
                 - @claude review — Full review of all changes
                 - @claude review latest or @claude review recent — Incremental review of newest changes only' }}
 
-          # Claude CLI arguments
+          # Claude CLI arguments for model and tools
           claude_args: |
-            --max-turns 10
+            --allowedTools "mcp__github__create_pending_pull_request_review,mcp__github__add_comment_to_pending_review,mcp__github__submit_pending_pull_request_review,mcp__github__get_pull_request_diff"
+
+          # Optional: Use sticky comments to make Claude reuse the same comment on subsequent pushes to the same PR
+          use_sticky_comment: true
 
           # Optional: Different prompts for different authors
           # direct_prompt: |
