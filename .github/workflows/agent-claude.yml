@@ -1,0 +1,91 @@
+name: Claude Code
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened, assigned]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  claude:
+    # Allow specific bots (@copilot[bot], @devin[bot], @coderabbitai[bot], @cursor[bot]) and all humans to trigger Claude
+    if: >
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.pull_request &&
+       contains(github.event.comment.body, '@claude') &&
+       (github.event.comment.user.type != 'Bot' ||
+        contains(fromJSON('["copilot[bot]", "devin[bot]", "coderabbitai[bot]", "cursor[bot]"]'), github.event.comment.user.login))) ||
+      (github.event_name == 'pull_request_review_comment' &&
+       contains(github.event.comment.body, '@claude') &&
+       (github.event.comment.user.type != 'Bot' ||
+        contains(fromJSON('["copilot[bot]", "devin[bot]", "coderabbitai[bot]", "cursor[bot]"]'), github.event.comment.user.login))) ||
+      (github.event_name == 'pull_request_review' &&
+       github.event.review && github.event.review.body &&
+       contains(github.event.review.body, '@claude') &&
+       (github.event.review.user.type != 'Bot' ||
+        contains(fromJSON('["copilot[bot]", "devin[bot]", "coderabbitai[bot]", "cursor[bot]"]'), github.event.review.user.login))) ||
+      (github.event_name == 'issues' &&
+       github.event.action == 'assigned' &&
+       github.event.assignee &&
+       github.event.assignee.login == 'claude') ||
+      (github.event_name == 'issues' &&
+       github.event.action == 'opened' &&
+       github.event.issue &&
+       contains(github.event.issue.assignees.*.login, 'claude'))
+
+    runs-on: ubuntu-latest
+    concurrency:
+      group: claude-${{ github.event.pull_request.number || github.event.issue.number || github.run_id }}
+      cancel-in-progress: true
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code
+        id: claude
+        if: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          model: claude-opus-4-1-20250805
+
+          allowed_bots: |
+            copilot[bot]
+            devin[bot]
+            coderabbitai[bot]
+            cursor[bot]
+
+          prompt: |
+            You have also been granted tools for editing files and running bun commands (install, run, test, typecheck, format, lint, sandbox, pre*) for testing your changes.
+            You also have access to `mcp__sequential-thinking__sequentialthinking` to work out more complex problems. Use it to think longer.
+            Use Bun to the fullest extent
+            Don't .gitignore `.agent/` or `path/to/rules` if they're not compiled with Rulesets
+
+          claude_args: |
+            --allowedTools "Edit,Read,Write,Bash(bun install),Bash(bun test:*),Bash(bun format:*),Bash(bun typecheck:*),Bash(bun lint:*),Bash(bun sandbox:*),Bash(bun pre:*),mcp__sequential-thinking__sequentialthinking"
+            --mcp-config '{"mcpServers":{"sequential-thinking":{"command":"npx","args":["-y","@modelcontextprotocol/server-sequential-thinking"]}}}'
+
+          additional_permissions: |
+            actions: read
+
+          assignee_trigger: 'claude'
+
+          experimental_allowed_domains: |
+            .anthropic.com
+            .github.com
+            .githubusercontent.com
+            ghcr.io
+            .blob.core.windows.net

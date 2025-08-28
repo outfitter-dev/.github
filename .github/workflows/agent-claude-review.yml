@@ -1,0 +1,99 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, ready_for_review, review_requested]
+  issue_comment:
+    types: [created]
+
+jobs:
+  claude-review:
+    # Run on PR events (open, ready_for_review, review_requested) OR when someone comments "@claude review"
+    # Allow specific bots (@copilot[bot], @devin[bot], @coderabbitai[bot], @cursor[bot]) and all humans
+    if: |
+      (github.event_name == 'pull_request' &&
+       github.event.pull_request.draft == false &&
+       github.event.pull_request.head.repo.fork == false) ||
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.pull_request &&
+       github.event.comment &&
+       contains(github.event.comment.body, '@claude review') &&
+       (github.event.comment.user.type != 'Bot' ||
+        contains(fromJSON('["copilot[bot]", "devin[bot]", "coderabbitai[bot]", "cursor[bot]"]'), github.event.comment.user.login)))
+
+    runs-on: ubuntu-latest
+    concurrency:
+      group: claude-review-${{ github.event.pull_request.number || github.event.issue.number || github.run_id }}
+      cancel-in-progress: true
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code Review
+        id: claude-review
+        if: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          model: claude-opus-4-1-20250805
+
+          prompt: |
+            ${{ github.event_name == 'issue_comment' &&
+                (contains(github.event.comment.body, '@claude review latest') || contains(github.event.comment.body, '@claude review recent')) &&
+                'Please perform an incremental review focusing ONLY on the newest commits since your last review. Provide inline comments strictly for changed hunks.' ||
+                'Please review this pull request and provide feedback on:
+                - Code quality and best practices
+                - Potential bugs or issues
+                - Performance considerations
+                - Security concerns
+                - Test coverage
+                - Documentation consistency: Verify that README.md and other docs reflect code changes
+
+                Additionally, focus on:
+                - For TypeScript files: Type safety and proper interface usage
+                - For API endpoints: Security, input validation, and error handling
+                - For React components: Performance, accessibility, and best practices
+                - For tests: Coverage, edge cases, and test quality
+
+                Be constructive and specific. Use inline comments where applicable.
+
+                ---
+                💡 For future reviews on this PR:
+                - @claude review — Full review of all changes
+                - @claude review latest or @claude review recent — Incremental review of newest changes only' }}
+
+          claude_args: |
+            --allowedTools "mcp__github__create_pending_pull_request_review,mcp__github__add_comment_to_pending_review,mcp__github__submit_pending_pull_request_review,mcp__github__get_pull_request_diff"
+
+          use_sticky_comment: true
+          additional_permissions: |
+            actions: read
+
+# This workflow runs automatically when:
+# 1. A PR is first opened (not draft)
+# 2. A draft PR is marked as ready for review
+# 3. Someone requests a review on the PR
+# 4. Someone comments "@claude review" on a PR
+#
+# Review types:
+# - Initial open: Full review with instructions for future reviews
+# - "@claude review": Full review of all changes
+# - "@claude review latest" or "@claude review recent": Incremental review of newest changes only
+#
+# Allowed comment sources:
+# - All human users
+# - Specific bots: @copilot[bot], @devin[bot], @coderabbitai[bot], @cursor[bot]
+#
+# It will NOT run on:
+# - New commits to existing PRs (unless manually triggered)
+# - Draft PRs
+# - Other bot comments (except the allowed ones)
