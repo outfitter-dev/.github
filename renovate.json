@@ -1,0 +1,57 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "timezone": "America/Denver",
+  "rangeStrategy": "bump",
+  "prHourlyLimit": 5,
+  "enabledManagers": ["npm", "pnpm", "gomod", "cargo"],
+  "packageRules": [
+    {
+      "matchManagers": ["npm", "pnpm"],
+      "groupName": "devDependencies (weekly)",
+      "matchDepTypes": ["devDependencies"],
+      "schedule": ["before 5am on monday"],
+      "automerge": true,
+      "automergeType": "pr",
+      "matchUpdateTypes": ["patch", "minor"]
+    },
+    {
+      "groupName": "runtime & toolchain",
+      "matchPackagePatterns": [
+        "^typescript$",
+        "^turbo",
+        "^@types/node$",
+        "^esbuild$",
+        "^vite$"
+      ],
+      "separateMinorPatch": true,
+      "prPriority": 20
+    },
+    {
+      "matchManagers": ["gomod", "cargo"],
+      "groupName": "backend deps (weekly)",
+      "schedule": ["before 5am on monday"]
+    },
+    {
+      "matchManagers": ["npm", "pnpm", "gomod", "cargo"],
+      "matchUpdateTypes": ["major"],
+      "prPriority": 10,
+      "separateMajorMinor": true,
+      "schedule": ["before 5am on saturday"]
+    },
+    {
+      "matchManagers": ["npm", "pnpm"],
+      "matchPackagePatterns": ["^@outfitter/"],
+      "groupName": "Outfitter workspace deps"
+    },
+    {
+      "extends": ["schedule:daily"],
+      "matchDatasources": ["npm", "github-releases", "go", "cargo"],
+      "matchUpdateTypes": ["digest", "pin", "pinDigest"],
+      "groupName": "security patches",
+      "labels": ["security"],
+      "prPriority": 30
+    }
+  ]
+}
+

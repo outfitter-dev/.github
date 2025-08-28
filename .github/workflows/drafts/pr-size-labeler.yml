@@ -1,0 +1,45 @@
+# Draft: PR Size Labeler
+# This workflow is a stub and lives under `drafts/` (ignored by label sync).
+# Move to `.github/workflows/pr-size-labeler.yml` when ready to enable.
+
+name: Draft - PR Size Labeler
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  label-size:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Placeholder for PR size labeling
+        run: |
+          echo "This is a stub. Choose a size labeler action and thresholds."
+          echo "Suggested thresholds: XS≤25, S≤100, M≤300, L≤800, XL>800 lines."
+
+      # Example 1: using pascalgn/size-label-action (uncomment to enable)
+      # - name: Apply size labels
+      #   uses: pascalgn/size-label-action@v0.5.0
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     sizes: |
+      #       XS=0..25
+      #       S=26..100
+      #       M=101..300
+      #       L=301..800
+      #       XL=801..100000
+
+      # Example 2: using codelytv/pr-size-labeler (uncomment to enable)
+      # - name: Apply size labels
+      #   uses: codelytv/pr-size-labeler@v1
+      #   with:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     xs_max_size: '25'
+      #     s_max_size: '100'
+      #     m_max_size: '300'
+      #     l_max_size: '800'
+
