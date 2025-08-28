@@ -45,38 +45,41 @@ jobs:
           # Optional: Specify model (defaults to Claude Sonnet 4, uncomment for Claude Opus 4.1)
           # model: "claude-opus-4-1-20250805"
 
-          # Direct prompt for automated review (no @claude mention needed)
+          # Direct prompt (single key) with safe event guard and combined guidance
           direct_prompt: |
-            ${{ contains(github.event.comment.body, '@claude review latest') || contains(github.event.comment.body, '@claude review recent') && 
-            'Please perform an incremental review focusing ONLY on the changes made since your last review. Look at the most recent commits and provide feedback specifically on what has changed.' ||
-            'Please review this pull request and provide feedback on:
-            - Code quality and best practices
-            - Potential bugs or issues
-            - Performance considerations
-            - Security concerns
-            - Test coverage
-            - Documentation consistency: Verify that README.md and other docs reflect any code changes
+            ${{ github.event_name == 'issue_comment' &&
+                (contains(github.event.comment.body, '@claude review latest') || contains(github.event.comment.body, '@claude review recent')) &&
+                'Please perform an incremental review focusing ONLY on the newest commits since your last review. Provide inline comments strictly for changed hunks.' ||
+                'Please review this pull request and provide feedback on:
+                - Code quality and best practices
+                - Potential bugs or issues
+                - Performance considerations
+                - Security concerns
+                - Test coverage
+                - Documentation consistency: Verify that README.md and other docs reflect code changes
 
-            Be constructive and specific in your feedback. Give inline comments where applicable.
+                Additionally, focus on:
+                - For TypeScript files: Type safety and proper interface usage
+                - For API endpoints: Security, input validation, and error handling
+                - For React components: Performance, accessibility, and best practices
+                - For tests: Coverage, edge cases, and test quality
 
-            ---
-            💡 **For future reviews on this PR**, you can request:
-            - `@claude review` - Full review of all changes
-            - `@claude review latest` or `@claude review recent` - Incremental review of only the newest changes since last review' }}
+                Be constructive and specific. Use inline comments where applicable.
+
+                ---
+                💡 For future reviews on this PR:
+                - @claude review — Full review of all changes
+                - @claude review latest or @claude review recent — Incremental review of newest changes only' }}
 
           # MCP tools for creating proper GitHub PR reviews with inline comments
-          allowed_tools: 'mcp__github__create_pending_pull_request_review,mcp__github__add_comment_to_pending_review,mcp__github__submit_pending_pull_request_review,mcp__github__get_pull_request_diff'
+          allowed_tools: |
+            mcp__github__create_pending_pull_request_review
+            mcp__github__add_comment_to_pending_review
+            mcp__github__submit_pending_pull_request_review
+            mcp__github__get_pull_request_diff
 
           # Optional: Use sticky comments to make Claude reuse the same comment on subsequent pushes to the same PR
           use_sticky_comment: true
-
-          # Optional: Customize review based on file types
-          direct_prompt: |
-            Review this PR focusing on:
-            - For TypeScript files: Type safety and proper interface usage
-            - For API endpoints: Security, input validation, and error handling
-            - For React components: Performance, accessibility, and best practices
-            - For tests: Coverage, edge cases, and test quality
 
           # Optional: Different prompts for different authors
           # direct_prompt: |
