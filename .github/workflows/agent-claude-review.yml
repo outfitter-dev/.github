@@ -2,7 +2,7 @@ name: Claude Code Review
 
 on:
   pull_request:
-    types: [opened, ready_for_review, review_requested] # Trigger on open, draft→ready, or review request
+    types: [opened, ready_for_review, review_requested]
   issue_comment:
     types: [created]
 
@@ -30,7 +30,7 @@ jobs:
       pull-requests: write
       issues: write
       id-token: write
-      actions: read # Required for Claude to read CI results
+      actions: read
 
     steps:
       - name: Checkout repository
@@ -41,11 +41,11 @@ jobs:
       - name: Run Claude Code Review
         id: claude-review
         if: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
-        uses: anthropics/claude-code-action@9726ef5  # v1
+        uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          model: claude-opus-4-1-20250805
 
-          # Prompt with safe event guard and combined guidance
           prompt: |
             ${{ github.event_name == 'issue_comment' &&
                 (contains(github.event.comment.body, '@claude review latest') || contains(github.event.comment.body, '@claude review recent')) &&
@@ -71,26 +71,13 @@ jobs:
                 - @claude review — Full review of all changes
                 - @claude review latest or @claude review recent — Incremental review of newest changes only' }}
 
-          # Claude CLI arguments for model and tools
           claude_args: |
             --allowedTools "mcp__github__create_pending_pull_request_review,mcp__github__add_comment_to_pending_review,mcp__github__submit_pending_pull_request_review,mcp__github__get_pull_request_diff"
 
-          # Optional: Use sticky comments to make Claude reuse the same comment on subsequent pushes to the same PR
           use_sticky_comment: true
+          additional_permissions: |
+            actions: read
 
-          # Optional: Different prompts for different authors
-          # direct_prompt: |
-          #   ${{ github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR' &&
-          #   'Welcome! Please review this PR from a first-time contributor. Be encouraging and provide detailed explanations for any suggestions.' ||
-          #   'Please provide a thorough code review focusing on our coding standards and best practices.' }}
-
-          # Optional: Add specific tools for running tests or linting
-          # allowed_tools: "Bash(npm run test),Bash(npm run lint),Bash(npm run typecheck)"
-
-          # Optional: Skip review for certain conditions
-          # if: |
-          #   !contains(github.event.pull_request.title, '[skip-review]') &&
-          #   !contains(github.event.pull_request.title, '[WIP]')
 # This workflow runs automatically when:
 # 1. A PR is first opened (not draft)
 # 2. A draft PR is marked as ready for review
