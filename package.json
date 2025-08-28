@@ -1,0 +1,15 @@
+{
+  "name": "@outfitter/github-config",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build:labels": "bun scripts/build-labels.ts",
+    "build:labels:optional": "bun scripts/build-labels.ts --include-optional"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^22.13.5",
+    "typescript": "^5.9.2"
+  }
+}
