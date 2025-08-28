@@ -1,0 +1,16 @@
+name: Update Labels on Change
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/labels.json'
+
+permissions:
+  issues: write
+
+jobs:
+  update-labels:
+    uses: ./.github/workflows/labels.yml
+    with: {}
+

@@ -1,0 +1,128 @@
+name: Update repository labels
+
+on:
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: 'Repository to update labels (format: owner/repo). Leave empty to update current repo.'
+        required: false
+        type: string
+  workflow_call:
+    inputs:
+      repository:
+        description: 'Repository to update labels (format: owner/repo). Leave empty to update current repo.'
+        required: false
+        type: string
+
+jobs:
+  create-labels:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: outfitter-dev/.github
+          sparse-checkout: |
+            .github/labels.json
+      
+      - name: Read labels configuration
+        id: labels
+        run: |
+          LABELS_JSON=$(cat .github/labels.json)
+          echo "labels<<EOF" >> $GITHUB_OUTPUT
+          echo "$LABELS_JSON" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      
+      - name: Create labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labelsJson = `${{ steps.labels.outputs.labels }}`;
+            const labels = JSON.parse(labelsJson);
+            
+            // Parse repository input or use current repo
+            let owner, repo;
+            const repoInput = '${{ inputs.repository }}';
+            
+            if (repoInput && repoInput !== '') {
+              const parts = repoInput.split('/');
+              if (parts.length !== 2) {
+                throw new Error('Repository must be in format owner/repo');
+              }
+              [owner, repo] = parts;
+            } else {
+              owner = context.repo.owner;
+              repo = context.repo.repo;
+            }
+            
+            console.log(`Updating labels for ${owner}/${repo}`);
+            
+            // First, handle label replacements/conversions
+            for (const label of labels) {
+              if (label.replaces && label.replaces.length > 0) {
+                for (const oldLabel of label.replaces) {
+                  try {
+                    // Check if the old label exists
+                    await github.rest.issues.getLabel({
+                      owner: owner,
+                      repo: repo,
+                      name: oldLabel
+                    });
+                    
+                    // If it exists, delete it
+                    await github.rest.issues.deleteLabel({
+                      owner: owner,
+                      repo: repo,
+                      name: oldLabel
+                    });
+                    console.log(`Deleted old label '${oldLabel}' (will be replaced by '${label.name}')`);
+                  } catch (error) {
+                    if (error.status === 404) {
+                      // Label doesn't exist, that's fine
+                    } else {
+                      console.error(`Error handling old label '${oldLabel}': ${error}`);
+                    }
+                  }
+                }
+              }
+            }
+            
+            // Now create all the new labels
+            for (const label of labels) {
+              try {
+                await github.rest.issues.createLabel({
+                  owner: owner,
+                  repo: repo,
+                  name: label.name,
+                  description: label.description || '',
+                  color: label.color
+                });
+                if (label.replaces && label.replaces.length > 0) {
+                  console.log(`Created label '${label.name}' (replaced: ${label.replaces.join(', ')})`);
+                } else {
+                  console.log(`Created label '${label.name}'`);
+                }
+              } catch (error) {
+                // Check if the error is because the label already exists
+                if (error.status === 422) {
+                  try {
+                    // Update existing label if it exists
+                    await github.rest.issues.updateLabel({
+                      owner: owner,
+                      repo: repo,
+                      name: label.name,
+                      description: label.description || '',
+                      color: label.color
+                    });
+                    console.log(`Updated existing label '${label.name}'`);
+                  } catch (updateError) {
+                    console.log(`Label '${label.name}' already exists and couldn't be updated: ${updateError}`);
+                  }
+                } else {
+                  // Log other errors
+                  console.error(`Error creating label '${label.name}': ${error}`);
+                }
+              }
+            }

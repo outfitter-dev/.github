@@ -1,0 +1,65 @@
+[
+  { "name": "scope/db",            "color": "4a5568", "description": "Database schemas, migrations, queries" },
+  { "name": "scope/auth",          "color": "e53e3e", "description": "Authentication and authorization" },
+  { "name": "scope/infra",         "color": "805ad5", "description": "Infrastructure and hosting" },
+  { "name": "scope/config",        "color": "718096", "description": "Configuration and environment settings" },
+  { "name": "scope/monitoring",    "color": "dd6b20", "description": "Logging, metrics, and observability" },
+  { "name": "scope/deployment",    "color": "a855f7", "description": "Deployment to environments and servers" },
+  { "name": "scope/distribution",  "color": "8b5cf6", "description": "Package publishing and release artifacts" },
+  
+  { "name": "scope/dx",            "color": "3182ce", "description": "Developer experience improvements" },
+  { "name": "scope/tooling",       "color": "2c7a7b", "description": "Development tools and scripts" },
+  { "name": "scope/mobile",        "color": "38a169", "description": "Mobile applications" },
+  { "name": "scope/sdk",           "color": "6b46c1", "description": "SDK and library development" },
+  { "name": "scope/integrations",  "color": "b83280", "description": "Third-party integrations" },
+  
+  { "name": "scope/analytics",     "color": "ed8936", "description": "Analytics, tracking, and metrics" },
+  { "name": "scope/billing",       "color": "f56565", "description": "Payments, subscriptions, and billing" },
+  { "name": "scope/onboarding",    "color": "48bb78", "description": "User onboarding and first-run experience" },
+  { "name": "scope/i18n",          "color": "9f7aea", "description": "Internationalization and translations" },
+  
+  { "name": "scope/monorepo",      "color": "2d3748", "description": "Monorepo structure and tooling" },
+  { "name": "scope/packages",      "color": "4c51bf", "description": "Package and library management" },
+  { "name": "scope/types",         "color": "667eea", "description": "TypeScript types and definitions" },
+  { "name": "scope/schemas",       "color": "a78bfa", "description": "Data schemas and validation" },
+  { "name": "scope/performance",   "color": "f59e0b", "description": "Performance optimization" },
+  { "name": "scope/reliability",   "color": "dc2626", "description": "Reliability and stability" },
+  { "name": "scope/security",      "color": "991b1b", "description": "Security concerns and hardening" },
+  { "name": "scope/qa",            "color": "2563eb", "description": "Quality assurance processes" },
+  { "name": "scope/logging",       "color": "6366f1", "description": "Logging and observability" },
+  { "name": "scope/error-handling","color": "ef4444", "description": "Error handling and recovery" },
+  { "name": "scope/code-quality",  "color": "10b981", "description": "Code quality and standards" },
+  { "name": "scope/dev-workflow",  "color": "8b5cf6", "description": "Development workflow and processes" },
+  
+  { "name": "test/coverage",       "color": "0e8a16", "description": "Test coverage improvements" },
+  { "name": "test/utils",          "color": "059669", "description": "Test utilities and helpers" },
+  { "name": "test/e2e",            "color": "0891b2", "description": "End-to-end tests" },
+  { "name": "test/unit",           "color": "0ea5e9", "description": "Unit tests" },
+  { "name": "test/integration",    "color": "06b6d4", "description": "Integration tests" },
+  
+  { "name": "priority/P0",           "color": "b60205", "description": "Critical—top of queue" },
+  { "name": "priority/P1",           "color": "d93f0b", "description": "High priority" },
+  { "name": "priority/P2",           "color": "fbca04", "description": "Medium priority" },
+  { "name": "priority/P3",           "color": "0e8a16", "description": "Low priority" },
+  
+  { "name": "urgency/critical",      "color": "dc2626", "description": "Critical urgency - immediate action" },
+  { "name": "urgency/high",          "color": "f59e0b", "description": "High urgency - soon" },
+  
+  { "name": "lifecycle/experimental", "color": "fbbf24", "description": "Experimental feature - may change" },
+  { "name": "lifecycle/beta",         "color": "f59e0b", "description": "Beta feature - stabilizing" },
+  { "name": "lifecycle/stable",       "color": "10b981", "description": "Stable feature - production ready" },
+  { "name": "lifecycle/deprecated",   "color": "ef4444", "description": "Deprecated - will be removed" },
+  
+  { "name": "ci/skip",         "color": "6b7280", "description": "Skip CI checks" },
+  { "name": "ci/urgent",       "color": "dc2626", "description": "Bypass CI requirements (emergency)" },
+  { "name": "ci/benchmark",    "color": "7c3aed", "description": "Run performance benchmarks" },
+  { "name": "ci/e2e",          "color": "0891b2", "description": "Run full E2E test suite" },
+  
+  { "name": "meta/breaking",      "color": "d73a49", "description": "Contains breaking changes" },
+  { "name": "meta/changelog",     "color": "1f2937", "description": "Include in changelog" },
+  { "name": "meta/release-notes", "color": "4a5568", "description": "Highlight in release notes" },
+  { "name": "meta/no-stale",      "color": "fbbf24", "description": "Exempt from stale bot" },
+  { "name": "meta/preflight",     "color": "10b981", "description": "Release preparation tasks" },
+  { "name": "meta/release-blocker", "color": "dc2626", "description": "Must resolve before release" },
+  { "name": "meta/standards",     "color": "4c51bf", "description": "Standards compliance and conventions" }
+]

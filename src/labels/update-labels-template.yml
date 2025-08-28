@@ -1,0 +1,104 @@
+name: Update Labels
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/update-labels.yml'
+
+jobs:
+  update-labels:
+    uses: outfitter-dev/.github/.github/workflows/labels.yml@main
+    permissions:
+      issues: write
+    with:
+      # Core labels are always included (type, status, needs, state, size, semver, source, community, agents, queue, changeset, bug categories)
+      # Common scopes are included by default (api, ui, cli, backend, documentation, build, ci, deps, tests, architecture)
+      # Note: Priority labels moved to optional - use Linear's priority field if using Linear integration
+      
+      # Uncomment additional scopes that apply to this repository:
+      additional_scopes: |
+        # Infrastructure & Platform
+        # scope/db
+        # scope/auth
+        # scope/infra
+        # scope/config
+        # scope/monitoring
+        # scope/deployment
+        # scope/distribution
+        
+        # Development Areas
+        # scope/dx
+        # scope/tooling
+        # scope/mobile
+        # scope/sdk
+        # scope/integrations
+        
+        # Business/Product
+        # scope/analytics
+        # scope/billing
+        # scope/onboarding
+        # scope/i18n
+        
+        # Architecture
+        # scope/monorepo
+        # scope/packages
+        # scope/types
+        # scope/schemas
+        # scope/performance
+        # scope/reliability
+        # scope/security
+        # scope/qa
+        # scope/logging
+        # scope/error-handling
+        # scope/code-quality
+        # scope/dev-workflow
+        
+        # Test Categories
+        # test/coverage
+        # test/utils
+        # test/e2e
+        # test/unit
+        # test/integration
+        
+        # Priority (for non-Linear projects)
+        # priority/P0
+        # priority/P1
+        # priority/P2
+        # priority/P3
+        
+        # Urgency (works with Linear priority field)
+        # urgency/critical
+        # urgency/high
+        
+        # Lifecycle (feature maturity)
+        # lifecycle/experimental
+        # lifecycle/beta
+        # lifecycle/stable
+        # lifecycle/deprecated
+        
+        # CI/CD Control
+        # ci/skip              # Skip CI checks
+        # ci/urgent            # Bypass CI requirements (emergency)
+        # ci/benchmark         # Run performance benchmarks
+        # ci/e2e               # Run full E2E test suite
+        
+        # Meta (for automation)
+        # meta/breaking        # Contains breaking changes
+        # meta/changelog       # Include in changelog
+        # meta/release-notes   # Highlight in release notes
+        # meta/no-stale        # Exempt from stale bot
+        # meta/preflight       # Release preparation tasks
+        # meta/release-blocker # Must resolve before release
+        # meta/standards       # Standards compliance and conventions
+      
+      # Or disable common scopes if not needed:
+      # disable_common_scopes: true
+      
+      # Add custom labels specific to this repo (JSON format):
+      # custom_labels: |
+      #   [
+      #     { "name": "project/special", "color": "ff0000", "description": "Special project" }
+      #   ]
