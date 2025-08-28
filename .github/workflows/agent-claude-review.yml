@@ -38,15 +38,12 @@ jobs:
 
       - name: Run Claude Code Review
         id: claude-review
-        uses: anthropics/claude-code-action@beta
+        uses: anthropics/claude-code-action@v1
         with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
 
-          # Optional: Specify model (defaults to Claude Sonnet 4, uncomment for Claude Opus 4.1)
-          # model: "claude-opus-4-1-20250805"
-
-          # Direct prompt (single key) with safe event guard and combined guidance
-          direct_prompt: |
+          # Prompt with safe event guard and combined guidance
+          prompt: |
             ${{ github.event_name == 'issue_comment' &&
                 (contains(github.event.comment.body, '@claude review latest') || contains(github.event.comment.body, '@claude review recent')) &&
                 'Please perform an incremental review focusing ONLY on the newest commits since your last review. Provide inline comments strictly for changed hunks.' ||
@@ -71,15 +68,9 @@ jobs:
                 - @claude review — Full review of all changes
                 - @claude review latest or @claude review recent — Incremental review of newest changes only' }}
 
-          # MCP tools for creating proper GitHub PR reviews with inline comments
-          allowed_tools: |
-            mcp__github__create_pending_pull_request_review
-            mcp__github__add_comment_to_pending_review
-            mcp__github__submit_pending_pull_request_review
-            mcp__github__get_pull_request_diff
-
-          # Optional: Use sticky comments to make Claude reuse the same comment on subsequent pushes to the same PR
-          use_sticky_comment: true
+          # Claude CLI arguments
+          claude_args: |
+            --max-turns 10
 
           # Optional: Different prompts for different authors
           # direct_prompt: |
